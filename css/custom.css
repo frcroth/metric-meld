@@ -1,0 +1,55 @@
+.library {
+    height: 100%;
+}
+
+.workspace {
+    background-color: gainsboro;
+    height: 100%;
+}
+
+.combinable {
+    position: absolute
+}
+
+.unit-inner {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.unit-inner-lib {
+    background-color: darkblue;
+}
+
+.unit-inner-special {
+    background-color: darkcyan;
+}
+
+.unit-inner-combined {
+    background-color: darkmagenta;
+}
+
+.unit-inner-combined-special {
+    background-color: darkviolet;
+}
+
+.merge-highlight div {
+    border-width: 3px;
+    border-color: red;
+}
+
+.symbol {
+    color: white;
+}
+
+.name-label {}
+
+.grabbable {
+    cursor: grab
+}
+
+.grabbing {
+    cursor: grabbing !important
+}
