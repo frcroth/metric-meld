@@ -28,7 +28,7 @@ export let baseUnits = [
 export let compositions = [
   { factors: { second: -1 }, name: 'hertz', symbol: 'Hz' },
   {
-    factors: { second: 2, kilogram: 1, meter: 1 },
+    factors: { second: -2, kilogram: 1, meter: 1 },
     name: 'newton',
     symbol: 'N',
   },
@@ -84,4 +84,9 @@ export let compositions = [
     symbol: 'H',
   },
   { factors: { mol: 1, seconds: -1 }, name: 'katal', symbol: 'kat' },
+  { factors: { meter: 2, factor: 10000 }, name: 'hectare', symbol: 'ha' },
+  { factors: { kilogram: 1, factor: 1000 }, name: 'tonne', symbol: 't' },
+  { factors: { kilogram: 1, factor: 1e-3 }, name: 'gram', symbol: 'g' },
+  { factors: { meter: 1, second: -1 }, name: 'meters per second', symbol: '\\frac{m}{s}', quantity: 'velocity' },
+  { factors: { meter: 3, factor: 1e-3 }, name: 'liter', symbol: 'l', quantity: 'volume' },
 ];

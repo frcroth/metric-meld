@@ -11,6 +11,8 @@ export class Unit {
 
     factor: number;
 
+    isSpecial: boolean = false;
+
     constructor(
         second: number,
         meter: number,
@@ -54,16 +56,26 @@ export class Unit {
 
     getKeyedUnits() {
         return [
-            { key: "m", value: this.meter, name: "meter" },
+            // Order is arranged to make names sound more natural (e.g. "ampere meter" instead of "meter ampere")
             { key: "kg", value: this.kilogram, name: "kilogram" },
             { key: "A", value: this.ampere, name: "ampere" },
             { key: "K", value: this.kelvin, name: "kelvin" },
             { key: "mol", value: this.mole, name: "mole" },
             { key: "cd", value: this.candela, name: "candela" },
+            { key: "m", value: this.meter, name: "meter" },
             { key: "s", value: this.second, name: "second" },
         ]
     }
 
+    getPowerName(power: number, name: string) {
+        if (power == 0) return "";
+        if (power == 1) return name;
+        if (power == 2) return `square ${name}`;
+        if (power == 3) return `cubic ${name}`;
+        return `${name}^${power}`;
+    }
+
+    // TOOD: Cache?
     getName() {
         let match = this.findExactCompositionMatch();
         if (match != null) {
@@ -73,8 +85,8 @@ export class Unit {
         let units = this.getKeyedUnits().filter(u => u.value != 0);
         let negativeUnits = units.filter(u => u.value < 0);
         let positiveUnits = units.filter(u => u.value > 0);
-        let positivePart = positiveUnits.map(u => u.name + (u.value != 1 ? `^${u.value}` : ''));
-        let negativePart = negativeUnits.map(u => u.name + (u.value != -1 ? `^${u.value}` : ''));
+        let positivePart = positiveUnits.map(u => this.getPowerName(Math.abs(u.value), u.name));
+        let negativePart = negativeUnits.map(u => this.getPowerName(Math.abs(u.value), u.name));
         let name = positivePart.join(" ");
 
         if (negativePart.length > 0) {
@@ -104,7 +116,7 @@ export class Unit {
         if (factor == 1e-6) return "micro";
         if (factor == 1e-9) return "nano";
         if (factor == 1e-12) return "pico";
-        return "";
+        return this.factor;
     }
 
     getFactorSymbol() {
@@ -139,6 +151,7 @@ export class Unit {
         */
         for (let unitSpec of namedUnitSpecs) {
             if (Unit.fromSpec(unitSpec.factors).equals(this)) {
+                this.isSpecial = true;
                 return unitSpec;
             }
         }
@@ -201,7 +214,7 @@ export class Unit {
     }
 
     inverse() {
-        return new Unit(
+        let newUnit = new Unit(
             -this.second,
             -this.meter,
             -this.kilogram,
@@ -211,12 +224,22 @@ export class Unit {
             -this.candela,
             1 / this.factor,
         );
+        newUnit.findExactCompositionMatch();
+        if (!window.ui.libraryContains(newUnit) && newUnit.isSpecial) {
+            window.ui.addLibraryElement(newUnit);
+        }
+
+        return newUnit;
     }
 }
 
 export class Inverse {
 
     get isUnit() { return false; }
+
+    equals(other: any) {
+        return other instanceof Inverse;
+    }
 }
 
 export type Combinable = Unit | Inverse;
@@ -224,7 +247,7 @@ export type Combinable = Unit | Inverse;
 export function combineUnits(unit1: Unit, unit2: Unit) {
     let u1 = unit1.normalized();
     let u2 = unit2.normalized();
-    return new Unit(
+    let newUnit = new Unit(
         u1.second + u2.second,
         u1.meter + u2.meter,
         u1.kilogram + u2.kilogram,
@@ -234,10 +257,17 @@ export function combineUnits(unit1: Unit, unit2: Unit) {
         u1.candela + u2.candela,
         u1.factor * u2.factor,
     );
+    newUnit.findExactCompositionMatch();
+    if (!window.ui.libraryContains(newUnit) && newUnit.isSpecial) {
+        window.ui.addLibraryElement(newUnit);
+    }
+    return newUnit;
 }
 
 let namedUnitSpecs = [...baseUnits, ...compositions];
 
 // TODO: Name units, find units from compositions, factors
+// TODO: Add quantity and explanation?
+// TODO: Add goals? Write how many units can be found on library?
 
 

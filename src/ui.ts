@@ -23,7 +23,7 @@ class WorkspaceElement {
         return !this.isLibraryElement;
     }
 
-    draw(root: HTMLElement, initialIndex: number | null) {
+    draw(root: HTMLElement, initialPosition: { x: number, y: number } = null) {
         this.node = document.createElement('div');
         this.innerRect = document.createElement('div');
 
@@ -47,9 +47,9 @@ class WorkspaceElement {
         root.appendChild(this.node);
         this.initializeDragging(this.node);
 
-        if (initialIndex) {
-            this.node.style.left = '10px';
-            this.node.style.top = `${50 + initialIndex * 70}px`;
+        if (initialPosition) {
+            this.node.style.left = `${initialPosition.x}px`;
+            this.node.style.top = `${initialPosition.y}px`;
         }
 
 
@@ -222,10 +222,27 @@ class WorkspaceElement {
 
 export class UI {
     elements: Array<WorkspaceElement>;
+    libraryWidth: number = 0;
+    libraryHeight: number = 0;
+    nextIndex = 0;
 
     constructor() {
         this.elements = new Array();
+        this.libraryHeight = 600; //TODO: calculate this
+        this.libraryWidth = 600;
     }
+
+    getPositionForIndex(index: number) {
+        let elementSpacing = 60;
+        let elementHorizontalSpacing = 60;
+        let topPadding = 50;
+
+        let x = Math.floor(elementSpacing * index / this.libraryHeight) * elementHorizontalSpacing;
+        let y = topPadding + index % Math.floor(this.libraryHeight / elementSpacing) * elementSpacing;
+
+        return { x, y };
+    }
+
     init() {
         baseUnits.forEach((baseUnit) => {
             let unit = Unit.fromSpec(baseUnit.factors);
@@ -237,7 +254,24 @@ export class UI {
         inverseElement.isLibraryElement = true;
         this.elements.push(inverseElement);
         let initRoot = document.getElementById('lib');
-        this.elements.forEach((element, i) => element.draw(initRoot, i));
+        this.elements.forEach((element) => {
+            element.draw(initRoot, this.getPositionForIndex(this.nextIndex));
+            this.nextIndex++;
+        });
         setTimeout(() => this.elements.forEach((element) => element.redraw()), 50);
     }
+
+    libraryContains(unit: Unit) {
+        return this.elements.some((element) => element.inner.equals(unit));
+    }
+
+    addLibraryElement(unit: Unit) {
+        let we = new WorkspaceElement(unit, unit.getSymbol(), unit.getName());
+        we.isLibraryElement = true;
+        this.elements.push(we);
+        we.draw(document.getElementById('lib'), this.getPositionForIndex(this.nextIndex++));
+        we.redraw();
+    }
 }
+
+// TODO: Fix MathJax import
