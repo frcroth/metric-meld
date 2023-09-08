@@ -15,7 +15,7 @@ export class Library {
 
 
     getNextCompositionHint() {
-
+        // TODO.
     }
 
     addFoundElement(unit: Unit) {

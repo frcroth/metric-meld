@@ -24,7 +24,7 @@ class WorkspaceElement {
         return !this.isLibraryElement;
     }
 
-    draw(root: HTMLElement, initialPosition: { x: number, y: number } = null) {
+    draw(root: HTMLElement, initialPosition: { x: number, y: number } = null, childIndex = null) {
         this.node = document.createElement('div');
         this.innerRect = document.createElement('div');
 
@@ -45,7 +45,12 @@ class WorkspaceElement {
         this.node.appendChild(this.innerRect);
         this.node.appendChild(this.nameElement);
 
-        root.appendChild(this.node);
+        if (childIndex != null) {
+            root.insertBefore(this.node, root.children[childIndex])
+        } else {
+            root.appendChild(this.node);
+        }
+
         this.initializeDragging(this.node);
 
         if (initialPosition) {
@@ -103,6 +108,17 @@ class WorkspaceElement {
             this.innerRect.classList.add('unit-inner-combined');
         }
 
+        if (this.isLibraryElement) {
+            this.node.classList.add("in-library")
+        } else {
+            this.node.classList.remove("in-library")
+            /*if (this.node.parentElement.id == "lib") {
+                this.node.remove();
+                document.getElementById("workspace").appendChild(this.node);
+            }*/ // TODO: Move newly created element to workspace
+        }
+
+
 
         // @ts-ignore
         if (MathJax) MathJax.typeset();
@@ -114,11 +130,14 @@ class WorkspaceElement {
     }
 
     clone() {
+        // new element takes the place of the current element, so that the drag can continue on the current element
         let newElement = new WorkspaceElement(this.inner, this.symbol, this.name); // TODO: clone inner
-        newElement.draw(document.getElementById('lib'), null);
+        let thisElementChildIndex = Array.from(this.node.parentNode.children).indexOf(this.node);
+        newElement.draw(document.getElementById('lib'), null, thisElementChildIndex);
         newElement.node.style.left = this.node.style.left;
         newElement.node.style.top = this.node.style.top;
-        window.ui.elements.push(newElement);
+        window.ui.elements.unshift(newElement);
+        newElement.isLibraryElement = this.isLibraryElement;
         newElement.redraw();
         return newElement;
     }
@@ -146,10 +165,12 @@ class WorkspaceElement {
             if (thisElement.isLibraryElement) {
                 // Duplicate this element and continue dragging this one
                 let newElement = thisElement.clone();
-                newElement.isLibraryElement = true;
                 thisElement.isLibraryElement = false; // So we can merge this one.
                 thisElement.redraw();
                 newElement.redraw();
+
+                thisElement.node.style.top = newElement.node.offsetTop - yOffset + 'px'
+                thisElement.node.style.left = newElement.node.offsetLeft - xOffset + 'px';
             }
 
             initialX = e.clientX;
@@ -247,6 +268,7 @@ export class UI {
         let topPadding = 50;
         let leftPadding = 10;
 
+        // This should not be used anymore? Spacing now done with static positioning
         let x = 10 + Math.floor(elementSpacing * index / this.libraryHeight) * elementHorizontalSpacing;
         let y = topPadding + index % Math.floor(this.libraryHeight / elementSpacing) * elementSpacing;
 
@@ -287,4 +309,4 @@ export class UI {
     }
 }
 
-// TODO: Fix MathJax import
+// TODO: Scroll library

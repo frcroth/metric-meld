@@ -15,6 +15,10 @@
     position: absolute
 }
 
+.in-library {
+    position: static !important
+}
+
 .unit-inner {
     width: 40px;
     height: 40px;
@@ -56,4 +60,10 @@
 
 .grabbing {
     cursor: grabbing !important
+}
+
+#hints {
+    margin-bottom: 10px;
+    margin-right: 5px;
+    padding: 2px;
 }
