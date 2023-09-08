@@ -1,4 +1,5 @@
 import { base, baseUnits } from './compositions';
+import { Library } from './library';
 import { Combinable, combineUnits, Unit, Inverse } from './units';
 
 class WorkspaceElement {
@@ -69,6 +70,12 @@ class WorkspaceElement {
             let newUnit = (this.inner as Unit).inverse();
 
             this.inner = newUnit;
+
+            let match = newUnit.findExactCompositionMatch();
+            if (match != null) {
+                newUnit.assignedName = match.assignedName;
+                newUnit.assignedSymbol = match.assignedSymbol;
+            }
             this.name = newUnit.getName();
             this.symbol = newUnit.getSymbol();
             this.isLibraryElement = false;
@@ -222,12 +229,14 @@ class WorkspaceElement {
 
 export class UI {
     elements: Array<WorkspaceElement>;
+    library: Library;
     libraryWidth: number = 0;
     libraryHeight: number = 0;
     nextIndex = 0;
 
     constructor() {
         this.elements = new Array();
+        this.library = new Library();
         this.libraryHeight = 600; //TODO: calculate this
         this.libraryWidth = 600;
     }
@@ -245,11 +254,13 @@ export class UI {
 
     init() {
         baseUnits.forEach((baseUnit) => {
-            let unit = Unit.fromSpec(baseUnit.factors);
+            let unit = Unit.fromSpec(baseUnit);
+            this.library.baseUnits.push(unit);
             let we = new WorkspaceElement(unit, baseUnit.symbol, baseUnit.name);
             we.isLibraryElement = true;
             this.elements.push(we);
         });
+
         let inverseElement = new WorkspaceElement(new Inverse(), '\\frac{1}{x}', 'Inverse');
         inverseElement.isLibraryElement = true;
         this.elements.push(inverseElement);
@@ -262,13 +273,14 @@ export class UI {
     }
 
     libraryContains(unit: Unit) {
-        return this.elements.some((element) => element.inner.equals(unit));
+        return this.library.isUnitFound(unit)
     }
 
     addLibraryElement(unit: Unit) {
         let we = new WorkspaceElement(unit, unit.getSymbol(), unit.getName());
         we.isLibraryElement = true;
         this.elements.push(we);
+        this.library.addFoundElement(unit);
         we.draw(document.getElementById('lib'), this.getPositionForIndex(this.nextIndex++));
         we.redraw();
     }

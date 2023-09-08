@@ -1,4 +1,4 @@
-import { base, baseUnits, compositions } from './compositions';
+import { base } from './compositions';
 
 export class Unit {
     second: number;
@@ -12,6 +12,8 @@ export class Unit {
     factor: number;
 
     isSpecial: boolean = false;
+    assignedName: string | null = null;
+    assignedSymbol: string | null = null;
 
     constructor(
         second: number,
@@ -75,11 +77,9 @@ export class Unit {
         return `${name}^${power}`;
     }
 
-    // TOOD: Cache?
     getName() {
-        let match = this.findExactCompositionMatch();
-        if (match != null) {
-            return match.name;
+        if (this.assignedName != null) {
+            return this.assignedName;
         }
 
         let units = this.getKeyedUnits().filter(u => u.value != 0);
@@ -145,25 +145,23 @@ export class Unit {
 
     }
 
-    findExactCompositionMatch() {
+    findExactCompositionMatch(): Unit | null {
         /*
         Find the exact composition that matches this unit.
         */
-        for (let unitSpec of namedUnitSpecs) {
-            if (Unit.fromSpec(unitSpec.factors).equals(this)) {
+        for (let unit of window.ui.library.allCompositions) {
+            if (unit.equals(this)) {
                 this.isSpecial = true;
-                return unitSpec;
+                return unit;
             }
         }
         return null;
-    } // TODO: Put found matches in library
+    }
 
 
     getSymbol() {
-
-        let match = this.findExactCompositionMatch();
-        if (match != null) {
-            return match.symbol;
+        if (this.assignedSymbol != null) {
+            return this.assignedSymbol;
         }
 
         let units = this.getKeyedUnits().filter(u => u.value != 0);
@@ -188,16 +186,19 @@ export class Unit {
     get isUnit() { return true; }
 
     static fromSpec(spec: any) {
-        return new Unit(
-            spec.second || 0,
-            spec.meter || 0,
-            spec.kilogram || 0,
-            spec.ampere || 0,
-            spec.kelvin || 0,
-            spec.mole || 0,
-            spec.candela || 0,
-            spec.factor || 1,
+        let newUnit = new Unit(
+            spec.factors.second || 0,
+            spec.factors.meter || 0,
+            spec.factors.kilogram || 0,
+            spec.factors.ampere || 0,
+            spec.factors.kelvin || 0,
+            spec.factors.mole || 0,
+            spec.factors.candela || 0,
+            spec.factors.factor || 1,
         );
+        newUnit.assignedName = spec.name;
+        newUnit.assignedSymbol = spec.symbol;
+        return newUnit;
     }
 
     index(i: number): number {
@@ -224,7 +225,11 @@ export class Unit {
             -this.candela,
             1 / this.factor,
         );
-        newUnit.findExactCompositionMatch();
+        let match = newUnit.findExactCompositionMatch();
+        if (match != null) {
+            newUnit.assignedName = match.assignedName;
+            newUnit.assignedSymbol = match.assignedSymbol;
+        }
         if (!window.ui.libraryContains(newUnit) && newUnit.isSpecial) {
             window.ui.addLibraryElement(newUnit);
         }
@@ -257,14 +262,17 @@ export function combineUnits(unit1: Unit, unit2: Unit) {
         u1.candela + u2.candela,
         u1.factor * u2.factor,
     );
-    newUnit.findExactCompositionMatch();
+    let match = newUnit.findExactCompositionMatch();
+    if (match != null) {
+        newUnit.assignedName = match.assignedName;
+
+        newUnit.assignedSymbol = match.assignedSymbol;
+    }
     if (!window.ui.libraryContains(newUnit) && newUnit.isSpecial) {
         window.ui.addLibraryElement(newUnit);
     }
     return newUnit;
 }
-
-let namedUnitSpecs = [...baseUnits, ...compositions];
 
 // TODO: Name units, find units from compositions, factors
 // TODO: Add quantity and explanation?
