@@ -245,8 +245,9 @@ export class UI {
         let elementSpacing = 60;
         let elementHorizontalSpacing = 60;
         let topPadding = 50;
+        let leftPadding = 10;
 
-        let x = Math.floor(elementSpacing * index / this.libraryHeight) * elementHorizontalSpacing;
+        let x = 10 + Math.floor(elementSpacing * index / this.libraryHeight) * elementHorizontalSpacing;
         let y = topPadding + index % Math.floor(this.libraryHeight / elementSpacing) * elementSpacing;
 
         return { x, y };
