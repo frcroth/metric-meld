@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const devMode = process.env.NODE_ENV !== "production";
 const basePath = path.resolve(__dirname, "dist");
-const ASSET_PATH = process.env.ASSET_PATH || 'assets';
+const ASSET_PATH = process.env.ASSET_PATH || "assets";
 
 let plugins = [
     new MiniCssExtractPlugin({
@@ -15,13 +15,13 @@ let plugins = [
         template: "./index.html"
     }),
     new webpack.DefinePlugin({
-        'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
+        "process.env.ASSET_PATH": JSON.stringify(ASSET_PATH),
     }),
-]
+];
 
 const devPlugins = [
     new webpack.HotModuleReplacementPlugin()
-]
+];
 
 if (devMode) {
     plugins.concat(devPlugins);
@@ -33,7 +33,7 @@ const config = {
         "./css/custom.css"
     ],
     resolve: {
-        extensions: ['.ts', '.js', '']
+        extensions: [".ts", ".js", ""]
     },
     output: {
         filename: "main.[hash].js",
@@ -45,7 +45,7 @@ const config = {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
+                use: "ts-loader",
                 exclude: /node_modules/,
             },
             {
@@ -74,6 +74,6 @@ const config = {
         port: 8080,
         hot: true
     }
-}
+};
 
 module.exports = config;

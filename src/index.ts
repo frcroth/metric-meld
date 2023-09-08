@@ -1,6 +1,6 @@
-import { UI } from './ui';
+import { UI } from "./ui";
 
-let ui = new UI();
+const ui = new UI();
 
 declare global {
   interface Window {

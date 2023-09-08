@@ -1,4 +1,4 @@
-import { base } from './compositions';
+import { base } from "./compositions";
 
 export class Unit {
     second: number;
@@ -38,7 +38,7 @@ export class Unit {
     }
 
     normalized() {
-        let baseUnit = { ...base.factors };
+        const baseUnit = { ...base.factors };
         Object.assign(baseUnit, this);
         return baseUnit;
     }
@@ -66,7 +66,7 @@ export class Unit {
             { key: "cd", value: this.candela, name: "candela" },
             { key: "m", value: this.meter, name: "meter" },
             { key: "s", value: this.second, name: "second" },
-        ]
+        ];
     }
 
     getPowerName(power: number, name: string) {
@@ -82,11 +82,11 @@ export class Unit {
             return this.assignedName;
         }
 
-        let units = this.getKeyedUnits().filter(u => u.value != 0);
-        let negativeUnits = units.filter(u => u.value < 0);
-        let positiveUnits = units.filter(u => u.value > 0);
-        let positivePart = positiveUnits.map(u => this.getPowerName(Math.abs(u.value), u.name));
-        let negativePart = negativeUnits.map(u => this.getPowerName(Math.abs(u.value), u.name));
+        const units = this.getKeyedUnits().filter(u => u.value != 0);
+        const negativeUnits = units.filter(u => u.value < 0);
+        const positiveUnits = units.filter(u => u.value > 0);
+        const positivePart = positiveUnits.map(u => this.getPowerName(Math.abs(u.value), u.name));
+        const negativePart = negativeUnits.map(u => this.getPowerName(Math.abs(u.value), u.name));
         let name = positivePart.join(" ");
 
         if (negativePart.length > 0) {
@@ -102,7 +102,7 @@ export class Unit {
     }
 
     getFactorName() {
-        let factor = this.factor;
+        const factor = this.factor;
         if (factor == 1) return "";
         if (factor == 1e12) return "tera";
         if (factor == 1e9) return "giga";
@@ -149,7 +149,7 @@ export class Unit {
         /*
         Find the exact composition that matches this unit.
         */
-        for (let unit of window.ui.library.allCompositions) {
+        for (const unit of window.ui.library.allCompositions) {
             if (unit.equals(this)) {
                 this.isSpecial = true;
                 return unit;
@@ -164,21 +164,21 @@ export class Unit {
             return this.assignedSymbol;
         }
 
-        let units = this.getKeyedUnits().filter(u => u.value != 0);
-        let negativeUnits = units.filter(u => u.value < 0);
-        let positiveUnits = units.filter(u => u.value > 0);
-        let positivePart = positiveUnits.map(u => u.key + (u.value != 1 ? `^${u.value}` : ''));
-        let negativePart = negativeUnits.map(u => u.key + (u.value != -1 ? `^${-u.value}` : ''));
+        const units = this.getKeyedUnits().filter(u => u.value != 0);
+        const negativeUnits = units.filter(u => u.value < 0);
+        const positiveUnits = units.filter(u => u.value > 0);
+        const positivePart = positiveUnits.map(u => u.key + (u.value != 1 ? `^${u.value}` : ""));
+        const negativePart = negativeUnits.map(u => u.key + (u.value != -1 ? `^${-u.value}` : ""));
         // put factor in front
         if (this.factor != 1) {
             positivePart.unshift(this.getFactorSymbol());
         }
-        let name = positivePart.join('');
+        let name = positivePart.join("");
         if (negativePart.length > 0) {
             if (positivePart.length == 0) {
-                name = '1';
+                name = "1";
             }
-            name = `\\frac{${name}}{${negativePart.join('')}}`;
+            name = `\\frac{${name}}{${negativePart.join("")}}`;
         }
         return name;
     }
@@ -186,7 +186,7 @@ export class Unit {
     get isUnit() { return true; }
 
     static fromSpec(spec: any) {
-        let newUnit = new Unit(
+        const newUnit = new Unit(
             spec.factors.second || 0,
             spec.factors.meter || 0,
             spec.factors.kilogram || 0,
@@ -203,19 +203,19 @@ export class Unit {
 
     index(i: number): number {
         switch (i) {
-            case 0: return this.second;
-            case 1: return this.meter;
-            case 2: return this.kilogram;
-            case 3: return this.ampere;
-            case 4: return this.kelvin;
-            case 5: return this.mole;
-            case 6: return this.candela;
-            case 7: return this.factor;
+        case 0: return this.second;
+        case 1: return this.meter;
+        case 2: return this.kilogram;
+        case 3: return this.ampere;
+        case 4: return this.kelvin;
+        case 5: return this.mole;
+        case 6: return this.candela;
+        case 7: return this.factor;
         }
     }
 
     inverse() {
-        let newUnit = new Unit(
+        const newUnit = new Unit(
             -this.second,
             -this.meter,
             -this.kilogram,
@@ -225,7 +225,7 @@ export class Unit {
             -this.candela,
             1 / this.factor,
         );
-        let match = newUnit.findExactCompositionMatch();
+        const match = newUnit.findExactCompositionMatch();
         if (match != null) {
             newUnit.assignedName = match.assignedName;
             newUnit.assignedSymbol = match.assignedSymbol;
@@ -250,9 +250,9 @@ export class Inverse {
 export type Combinable = Unit | Inverse;
 
 export function combineUnits(unit1: Unit, unit2: Unit) {
-    let u1 = unit1.normalized();
-    let u2 = unit2.normalized();
-    let newUnit = new Unit(
+    const u1 = unit1.normalized();
+    const u2 = unit2.normalized();
+    const newUnit = new Unit(
         u1.second + u2.second,
         u1.meter + u2.meter,
         u1.kilogram + u2.kilogram,
@@ -262,7 +262,7 @@ export function combineUnits(unit1: Unit, unit2: Unit) {
         u1.candela + u2.candela,
         u1.factor * u2.factor,
     );
-    let match = newUnit.findExactCompositionMatch();
+    const match = newUnit.findExactCompositionMatch();
     if (match != null) {
         newUnit.assignedName = match.assignedName;
 

@@ -3,9 +3,9 @@ import { Unit } from "./units";
 
 export class Library {
 
-    baseUnits: Array<Unit>
-    foundDerivedUnits: Array<Unit>
-    allCompositions: Array<Unit>
+    baseUnits: Array<Unit>;
+    foundDerivedUnits: Array<Unit>;
+    allCompositions: Array<Unit>;
 
     constructor() {
         this.baseUnits = [];

@@ -1,6 +1,6 @@
-import { base, baseUnits } from './compositions';
-import { Library } from './library';
-import { Combinable, combineUnits, Unit, Inverse } from './units';
+import { baseUnits } from "./compositions";
+import { Library } from "./library";
+import { Combinable, combineUnits, Unit, Inverse } from "./units";
 
 class WorkspaceElement {
     inner: Combinable;
@@ -25,20 +25,20 @@ class WorkspaceElement {
     }
 
     draw(root: HTMLElement, initialPosition: { x: number, y: number } = null, childIndex = null) {
-        this.node = document.createElement('div');
-        this.innerRect = document.createElement('div');
+        this.node = document.createElement("div");
+        this.innerRect = document.createElement("div");
 
-        this.node.classList.add('combinable');
+        this.node.classList.add("combinable");
 
-        this.innerRect.classList.add('card');
-        this.innerRect.classList.add('unit-inner');
+        this.innerRect.classList.add("card");
+        this.innerRect.classList.add("unit-inner");
 
-        this.symbolElement = document.createElement('span');
-        this.symbolElement.classList.add('symbol');
+        this.symbolElement = document.createElement("span");
+        this.symbolElement.classList.add("symbol");
         this.symbolElement.innerText = this.symbol;
 
-        this.nameElement = document.createElement('span');
-        this.nameElement.classList.add('name-label');
+        this.nameElement = document.createElement("span");
+        this.nameElement.classList.add("name-label");
         this.nameElement.innerText = this.name;
 
         this.innerRect.appendChild(this.symbolElement);
@@ -46,7 +46,7 @@ class WorkspaceElement {
         this.node.appendChild(this.nameElement);
 
         if (childIndex != null) {
-            root.insertBefore(this.node, root.children[childIndex])
+            root.insertBefore(this.node, root.children[childIndex]);
         } else {
             root.appendChild(this.node);
         }
@@ -63,7 +63,7 @@ class WorkspaceElement {
 
     mergeWith(otherElement: WorkspaceElement) {
         if (otherElement.inner.isUnit && this.inner.isUnit) {
-            let newUnit = combineUnits(otherElement.inner as Unit, this.inner as Unit);
+            const newUnit = combineUnits(otherElement.inner as Unit, this.inner as Unit);
             this.inner = newUnit;
             this.name = newUnit.getName();
             this.symbol = newUnit.getSymbol();
@@ -72,11 +72,11 @@ class WorkspaceElement {
             otherElement.consume();
         }
         if (!otherElement.inner.isUnit && this.inner.isUnit) {
-            let newUnit = (this.inner as Unit).inverse();
+            const newUnit = (this.inner as Unit).inverse();
 
             this.inner = newUnit;
 
-            let match = newUnit.findExactCompositionMatch();
+            const match = newUnit.findExactCompositionMatch();
             if (match != null) {
                 newUnit.assignedName = match.assignedName;
                 newUnit.assignedSymbol = match.assignedSymbol;
@@ -97,21 +97,21 @@ class WorkspaceElement {
         this.nameElement.innerText = this.name;
         this.symbolElement.innerText = `$$${this.symbol}$$`;
 
-        this.innerRect.classList.remove('unit-inner-combined');
-        this.innerRect.classList.remove('unit-inner-lib');
-        this.innerRect.classList.remove('unit-inner-special');
+        this.innerRect.classList.remove("unit-inner-combined");
+        this.innerRect.classList.remove("unit-inner-lib");
+        this.innerRect.classList.remove("unit-inner-special");
         if (!this.inner.isUnit) {
-            this.innerRect.classList.add('unit-inner-special');
+            this.innerRect.classList.add("unit-inner-special");
         } else if (this.isLibraryElement) {
-            this.innerRect.classList.add('unit-inner-lib');
+            this.innerRect.classList.add("unit-inner-lib");
         } else {
-            this.innerRect.classList.add('unit-inner-combined');
+            this.innerRect.classList.add("unit-inner-combined");
         }
 
         if (this.isLibraryElement) {
-            this.node.classList.add("in-library")
+            this.node.classList.add("in-library");
         } else {
-            this.node.classList.remove("in-library")
+            this.node.classList.remove("in-library");
             /*if (this.node.parentElement.id == "lib") {
                 this.node.remove();
                 document.getElementById("workspace").appendChild(this.node);
@@ -131,9 +131,9 @@ class WorkspaceElement {
 
     clone() {
         // new element takes the place of the current element, so that the drag can continue on the current element
-        let newElement = new WorkspaceElement(this.inner, this.symbol, this.name); // TODO: clone inner
-        let thisElementChildIndex = Array.from(this.node.parentNode.children).indexOf(this.node);
-        newElement.draw(document.getElementById('lib'), null, thisElementChildIndex);
+        const newElement = new WorkspaceElement(this.inner, this.symbol, this.name); // TODO: clone inner
+        const thisElementChildIndex = Array.from(this.node.parentNode.children).indexOf(this.node);
+        newElement.draw(document.getElementById("lib"), null, thisElementChildIndex);
         newElement.node.style.left = this.node.style.left;
         newElement.node.style.top = this.node.style.top;
         window.ui.elements.unshift(newElement);
@@ -151,12 +151,12 @@ class WorkspaceElement {
             initialY = 0;
         node.onmousedown = (e) => dragMouseDown(e);
         node.onclick = null;
-        node.classList.add('grabbable');
+        node.classList.add("grabbable");
 
         let originalTop = 0;
         let originalLeft = 0;
 
-        let thisElement = this; //FIXME
+        const thisElement = this; //FIXME
 
         function dragMouseDown(e) {
             e = e || window.event;
@@ -164,13 +164,13 @@ class WorkspaceElement {
 
             if (thisElement.isLibraryElement) {
                 // Duplicate this element and continue dragging this one
-                let newElement = thisElement.clone();
+                const newElement = thisElement.clone();
                 thisElement.isLibraryElement = false; // So we can merge this one.
                 thisElement.redraw();
                 newElement.redraw();
 
-                thisElement.node.style.top = newElement.node.offsetTop - yOffset + 'px'
-                thisElement.node.style.left = newElement.node.offsetLeft - xOffset + 'px';
+                thisElement.node.style.top = newElement.node.offsetTop - yOffset + "px";
+                thisElement.node.style.left = newElement.node.offsetLeft - xOffset + "px";
             }
 
             initialX = e.clientX;
@@ -186,7 +186,7 @@ class WorkspaceElement {
         let mergePartner = null;
 
         function elementDrag(e) {
-            node.classList.add('grabbing');
+            node.classList.add("grabbing");
             e = e || window.event;
             e.preventDefault();
 
@@ -195,10 +195,10 @@ class WorkspaceElement {
             initialX = e.clientX;
             initialY = e.clientY;
 
-            node.style.top = node.offsetTop - yOffset + 'px';
-            node.style.left = node.offsetLeft - xOffset + 'px';
+            node.style.top = node.offsetTop - yOffset + "px";
+            node.style.left = node.offsetLeft - xOffset + "px";
 
-            let closestElement = [...window.ui.elements]
+            const closestElement = [...window.ui.elements]
                 .filter((element) => element != thisElement)
                 .map((element) => {
                     return { elem: element, dist: element.distanceTo(thisElement) };
@@ -206,10 +206,10 @@ class WorkspaceElement {
                 .sort((a, b) => a.dist - b.dist)[0];
             const distanceThreshold = 15;
             if (closestElement.dist <= distanceThreshold && closestElement.elem.acceptsMerge) {
-                node.classList.add('merge-highlight');
+                node.classList.add("merge-highlight");
                 mergePartner = closestElement;
             } else {
-                node.classList.remove('merge-highlight');
+                node.classList.remove("merge-highlight");
                 mergePartner = null;
             }
         }
@@ -218,7 +218,7 @@ class WorkspaceElement {
             document.onmouseup = null;
             document.onmousemove = null;
             e.preventDefault();
-            node.classList.remove('grabbing');
+            node.classList.remove("grabbing");
 
             if (mergePartner) {
                 // Do merge!
@@ -241,8 +241,8 @@ class WorkspaceElement {
     }
 
     distanceTo(otherElement: WorkspaceElement) {
-        let a = this.position;
-        let b = otherElement.position;
+        const a = this.position;
+        const b = otherElement.position;
 
         return Math.hypot(a.x - b.x, a.y - b.y);
     }
@@ -256,38 +256,38 @@ export class UI {
     nextIndex = 0;
 
     constructor() {
-        this.elements = new Array();
+        this.elements = [];
         this.library = new Library();
         this.libraryHeight = 600; //TODO: calculate this
         this.libraryWidth = 600;
     }
 
     getPositionForIndex(index: number) {
-        let elementSpacing = 60;
-        let elementHorizontalSpacing = 60;
-        let topPadding = 50;
-        let leftPadding = 10;
+        const elementSpacing = 60;
+        const elementHorizontalSpacing = 60;
+        const topPadding = 50;
+        const leftPadding = 10;
 
         // This should not be used anymore? Spacing now done with static positioning
-        let x = 10 + Math.floor(elementSpacing * index / this.libraryHeight) * elementHorizontalSpacing;
-        let y = topPadding + index % Math.floor(this.libraryHeight / elementSpacing) * elementSpacing;
+        const x = 10 + Math.floor(elementSpacing * index / this.libraryHeight) * elementHorizontalSpacing;
+        const y = topPadding + index % Math.floor(this.libraryHeight / elementSpacing) * elementSpacing;
 
         return { x, y };
     }
 
     init() {
         baseUnits.forEach((baseUnit) => {
-            let unit = Unit.fromSpec(baseUnit);
+            const unit = Unit.fromSpec(baseUnit);
             this.library.baseUnits.push(unit);
-            let we = new WorkspaceElement(unit, baseUnit.symbol, baseUnit.name);
+            const we = new WorkspaceElement(unit, baseUnit.symbol, baseUnit.name);
             we.isLibraryElement = true;
             this.elements.push(we);
         });
 
-        let inverseElement = new WorkspaceElement(new Inverse(), '\\frac{1}{x}', 'Inverse');
+        const inverseElement = new WorkspaceElement(new Inverse(), "\\frac{1}{x}", "Inverse");
         inverseElement.isLibraryElement = true;
         this.elements.push(inverseElement);
-        let initRoot = document.getElementById('lib');
+        const initRoot = document.getElementById("lib");
         this.elements.forEach((element) => {
             element.draw(initRoot, this.getPositionForIndex(this.nextIndex));
             this.nextIndex++;
@@ -296,15 +296,15 @@ export class UI {
     }
 
     libraryContains(unit: Unit) {
-        return this.library.isUnitFound(unit)
+        return this.library.isUnitFound(unit);
     }
 
     addLibraryElement(unit: Unit) {
-        let we = new WorkspaceElement(unit, unit.getSymbol(), unit.getName());
+        const we = new WorkspaceElement(unit, unit.getSymbol(), unit.getName());
         we.isLibraryElement = true;
         this.elements.push(we);
         this.library.addFoundElement(unit);
-        we.draw(document.getElementById('lib'), this.getPositionForIndex(this.nextIndex++));
+        we.draw(document.getElementById("lib"), this.getPositionForIndex(this.nextIndex++));
         we.redraw();
     }
 }
