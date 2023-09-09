@@ -14,6 +14,7 @@ export class Unit {
     isSpecial: boolean = false;
     assignedName: string | null = null;
     assignedSymbol: string | null = null;
+    assignedQuantity: string | null = null;
 
     constructor(
         second: number,
@@ -198,6 +199,7 @@ export class Unit {
         );
         newUnit.assignedName = spec.name;
         newUnit.assignedSymbol = spec.symbol;
+        newUnit.assignedQuantity = spec.quantity;
         return newUnit;
     }
 
@@ -229,6 +231,7 @@ export class Unit {
         if (match != null) {
             newUnit.assignedName = match.assignedName;
             newUnit.assignedSymbol = match.assignedSymbol;
+            newUnit.assignedQuantity = match.assignedQuantity;
         }
         if (!window.ui.libraryContains(newUnit) && newUnit.isSpecial) {
             window.ui.addLibraryElement(newUnit);
@@ -265,8 +268,8 @@ export function combineUnits(unit1: Unit, unit2: Unit) {
     const match = newUnit.findExactCompositionMatch();
     if (match != null) {
         newUnit.assignedName = match.assignedName;
-
         newUnit.assignedSymbol = match.assignedSymbol;
+        newUnit.assignedQuantity = match.assignedQuantity;
     }
     if (!window.ui.libraryContains(newUnit) && newUnit.isSpecial) {
         window.ui.addLibraryElement(newUnit);

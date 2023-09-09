@@ -6,20 +6,34 @@ export class Library {
     baseUnits: Array<Unit>;
     foundDerivedUnits: Array<Unit>;
     allCompositions: Array<Unit>;
+    notFoundUnits: Map<string, Unit>;
 
     constructor() {
         this.baseUnits = [];
         this.foundDerivedUnits = [];
         this.allCompositions = compositions.map(spec => Unit.fromSpec(spec));
+        this.notFoundUnits = new Map();
+        this.allCompositions.forEach(unit => this.notFoundUnits.set(unit.assignedName, unit));
     }
 
+    getNextComposition(): null | Unit {
+        let nextNotFound = this.notFoundUnits.values().next()?.value;
+        if(nextNotFound != null && nextNotFound != undefined) {
+            return nextNotFound;
+        }
+    }
 
     getNextCompositionHint() {
-        // TODO.
+        let nextNotFound = this.getNextComposition();
+        if(nextNotFound != null) {
+            return `Find a unit for <i>${nextNotFound.assignedQuantity}</i>.`;
+        }
+        return "All units found!";
     }
 
     addFoundElement(unit: Unit) {
         this.foundDerivedUnits.push(unit);
+        this.notFoundUnits.delete(unit.assignedName);
     }
 
 

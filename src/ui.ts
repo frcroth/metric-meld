@@ -80,6 +80,7 @@ class WorkspaceElement {
             if (match != null) {
                 newUnit.assignedName = match.assignedName;
                 newUnit.assignedSymbol = match.assignedSymbol;
+                newUnit.assignedQuantity = match.assignedQuantity;
             }
             this.name = newUnit.getName();
             this.symbol = newUnit.getSymbol();
@@ -293,6 +294,7 @@ export class UI {
             this.nextIndex++;
         });
         setTimeout(() => this.elements.forEach((element) => element.redraw()), 50);
+        this.updateText();
     }
 
     libraryContains(unit: Unit) {
@@ -306,6 +308,11 @@ export class UI {
         this.library.addFoundElement(unit);
         we.draw(document.getElementById("lib"), this.getPositionForIndex(this.nextIndex++));
         we.redraw();
+        this.updateText();
+    }
+
+    updateText() {
+        document.getElementById("next-unit").innerHTML=this.library.getNextCompositionHint();
     }
 }
 
