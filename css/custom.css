@@ -50,6 +50,10 @@
     background-color: darkviolet;
 }
 
+.unit-inner-combined-lib {
+    background-color: darkgreen;
+}
+
 .merge-highlight div {
     border-width: 3px;
     border-color: red;

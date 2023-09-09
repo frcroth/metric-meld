@@ -93,11 +93,14 @@ class WorkspaceElement {
 
         this.innerRect.classList.remove("unit-inner-combined");
         this.innerRect.classList.remove("unit-inner-lib");
+        this.innerRect.classList.remove("unit-inner-combined-lib");
         this.innerRect.classList.remove("unit-inner-special");
         if (!this.inner.isUnit) {
             this.innerRect.classList.add("unit-inner-special");
         } else if (this.isLibraryElement) {
             this.innerRect.classList.add("unit-inner-lib");
+        } else if ((this.inner as Unit).isSpecial){
+            this.innerRect.classList.add("unit-inner-combined-lib");
         } else {
             this.innerRect.classList.add("unit-inner-combined");
         }
@@ -224,6 +227,13 @@ class WorkspaceElement {
                 // console.log("No drag")
                 // No drag has happened
             }
+
+            let boundingRect = node.getBoundingClientRect();
+            let repoBoundingRect = document.getElementById("units-repo").getBoundingClientRect();
+            if(boundingRect.top > repoBoundingRect.top && boundingRect.left > repoBoundingRect.left) {
+                // Delete unit if dropped on library
+                thisElement.consume();
+            }
         }
     }
 
@@ -296,6 +306,5 @@ export class UI {
     }
 }
 
-// TODO: Scroll library
 // TODO: When dragging over library, remove element
 // TODO: Formula collection?    
