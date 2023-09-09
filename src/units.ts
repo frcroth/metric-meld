@@ -245,7 +245,7 @@ export class Inverse {
 
     get isUnit() { return false; }
 
-    equals(other: any) {
+    equals(other: Combinable) {
         return other instanceof Inverse;
     }
 }

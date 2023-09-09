@@ -20,7 +20,10 @@
 }
 
 .in-library {
-    position: static !important
+    position: static !important;
+    display: flex;
+    margin-bottom: 5px;
+    column-gap: 5px;
 }
 
 .unit-inner {
@@ -70,4 +73,11 @@
     margin-bottom: 10px;
     margin-right: 5px;
     padding: 2px;
+}
+
+#units-repo {
+    height: 70vh;
+    overflow: scroll;
+    margin-right: 5px;
+
 }

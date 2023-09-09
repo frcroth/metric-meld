@@ -24,7 +24,7 @@ class WorkspaceElement {
         return !this.isLibraryElement;
     }
 
-    draw(root: HTMLElement, initialPosition: { x: number, y: number } = null, childIndex = null) {
+    draw(root: HTMLElement, childIndex = null) {
         this.node = document.createElement("div");
         this.innerRect = document.createElement("div");
 
@@ -52,13 +52,6 @@ class WorkspaceElement {
         }
 
         this.initializeDragging(this.node);
-
-        if (initialPosition) {
-            this.node.style.left = `${initialPosition.x}px`;
-            this.node.style.top = `${initialPosition.y}px`;
-        }
-
-
     }
 
     mergeWith(otherElement: WorkspaceElement) {
@@ -134,7 +127,7 @@ class WorkspaceElement {
         // new element takes the place of the current element, so that the drag can continue on the current element
         const newElement = new WorkspaceElement(this.inner, this.symbol, this.name); // TODO: clone inner
         const thisElementChildIndex = Array.from(this.node.parentNode.children).indexOf(this.node);
-        newElement.draw(document.getElementById("lib"), null, thisElementChildIndex);
+        newElement.draw(document.getElementById("units-repo"), thisElementChildIndex);
         newElement.node.style.left = this.node.style.left;
         newElement.node.style.top = this.node.style.top;
         window.ui.elements.unshift(newElement);
@@ -170,12 +163,13 @@ class WorkspaceElement {
                 thisElement.redraw();
                 newElement.redraw();
 
-                thisElement.node.style.top = newElement.node.offsetTop - yOffset + "px";
+                thisElement.node.style.top = newElement.node.getBoundingClientRect().top - yOffset + "px";
                 thisElement.node.style.left = newElement.node.offsetLeft - xOffset + "px";
             }
 
             initialX = e.clientX;
             initialY = e.clientY;
+            console.log(e);
             document.onmouseup = (e) => closeDragElement(e);
 
             document.onmousemove = (e) => elementDrag(e);
@@ -254,7 +248,6 @@ export class UI {
     library: Library;
     libraryWidth: number = 0;
     libraryHeight: number = 0;
-    nextIndex = 0;
 
     constructor() {
         this.elements = [];
@@ -263,18 +256,6 @@ export class UI {
         this.libraryWidth = 600;
     }
 
-    getPositionForIndex(index: number) {
-        const elementSpacing = 60;
-        const elementHorizontalSpacing = 60;
-        const topPadding = 50;
-        const leftPadding = 10;
-
-        // This should not be used anymore? Spacing now done with static positioning
-        const x = 10 + Math.floor(elementSpacing * index / this.libraryHeight) * elementHorizontalSpacing;
-        const y = topPadding + index % Math.floor(this.libraryHeight / elementSpacing) * elementSpacing;
-
-        return { x, y };
-    }
 
     init() {
         baseUnits.forEach((baseUnit) => {
@@ -288,10 +269,9 @@ export class UI {
         const inverseElement = new WorkspaceElement(new Inverse(), "\\frac{1}{x}", "Inverse");
         inverseElement.isLibraryElement = true;
         this.elements.push(inverseElement);
-        const initRoot = document.getElementById("lib");
+        const initRoot = document.getElementById("units-repo");
         this.elements.forEach((element) => {
-            element.draw(initRoot, this.getPositionForIndex(this.nextIndex));
-            this.nextIndex++;
+            element.draw(initRoot);
         });
         setTimeout(() => this.elements.forEach((element) => element.redraw()), 50);
         this.updateText();
@@ -306,7 +286,7 @@ export class UI {
         we.isLibraryElement = true;
         this.elements.push(we);
         this.library.addFoundElement(unit);
-        we.draw(document.getElementById("lib"), this.getPositionForIndex(this.nextIndex++));
+        we.draw(document.getElementById("units-repo"));
         we.redraw();
         this.updateText();
     }
@@ -317,3 +297,5 @@ export class UI {
 }
 
 // TODO: Scroll library
+// TODO: When dragging over library, remove element
+// TODO: Formula collection?    
