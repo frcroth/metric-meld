@@ -46,16 +46,8 @@ export class Unit {
     }
 
     get isBase() {
-        return (
-            this.second == 0 &&
-            this.meter == 0 &&
-            this.kilogram == 0 &&
-            this.ampere == 0 &&
-            this.kelvin == 0 &&
-            this.mole == 0 &&
-            this.candela == 0 &&
-            this.factor == 1
-        );
+        // exactly one of the base units is one
+        return this.getKeyedUnits().filter(u => u.value == 1).length == 1 && this.getKeyedUnits().filter(u => u.value == 0).length == 6 && this.factor == 1;
     }
 
     equals(other: Unit) {
@@ -256,6 +248,13 @@ export class Unit {
 
         return newUnit;
     }
+
+    getHoverHint() {
+        let quantityString = this.assignedQuantity != null ? `- A unit for ${this.assignedQuantity}. ` : "";
+        let baseString = this.isBase ? "This is a base unit. " : "";
+        let nameString = this.isSpeciallyNamed ? "This unit is a specially named derived unit." : "";
+        return `\\(${this.getSymbol()}\\) : ${this.getName()} ${quantityString}${baseString}${nameString}$$s^{${this.second}}m^{${this.meter}}kg^{${this.kilogram}}A^{${this.ampere}}K^{${this.kelvin}}mol^{${this.mole}}cd^{${this.candela}}\\cdot${this.factor}$$`;
+    }
 }
 
 export class Inverse {
@@ -264,6 +263,14 @@ export class Inverse {
 
     equals(other: Combinable) {
         return other instanceof Inverse;
+    }
+
+    getHoverHint() {
+        return "Use inverse to get the reciprocal of another unit.";
+    }
+
+    getName() {
+        return "Inverse";
     }
 }
 

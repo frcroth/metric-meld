@@ -15,17 +15,18 @@ export const base = {
 };
 
 export const baseUnits = [
-    { factors: { second: 1 }, name: "second", symbol: "s", isBase: true },
-    { factors: { meter: 1 }, name: "meter", symbol: "m" },
-    { factors: { kilogram: 1 }, name: "kilogram", symbol: "kg", isBase: true },
-    { factors: { ampere: 1 }, name: "ampere", symbol: "A", isBase: true },
-    { factors: { kelvin: 1 }, name: "Kelvin", symbol: "K", isBase: true },
-    { factors: { mole: 1 }, name: "mole", symbol: "mol", isBase: true },
-    { factors: { candela: 1 }, name: "candela", symbol: "can", isBase: true },
+    { factors: { second: 1 }, name: "second", symbol: "s", isBase: true, quantity: "time" },
+    { factors: { meter: 1 }, name: "meter", symbol: "m", quantity: "length", isBase: true },
+    { factors: { kilogram: 1 }, name: "kilogram", symbol: "kg", isBase: true, quantity: "mass" },
+    { factors: { ampere: 1 }, name: "ampere", symbol: "A", isBase: true, quantity: "electric current" },
+    { factors: { kelvin: 1 }, name: "Kelvin", symbol: "K", isBase: true, quantity: "temperature" },
+    { factors: { mole: 1 }, name: "mole", symbol: "mol", isBase: true, quantity: "amount of substance" },
+    { factors: { candela: 1 }, name: "candela", symbol: "can", isBase: true, quantity: "luminous intensity" },
     { factors: { factor: 10 }, name: "deca", symbol: "\\cdot 10", isBase: true },
 ];
 
 export const compositions = [
+    { factors: { meter: 2 }, name: "square meter", symbol: "m^2", quantity: "area" },
     { factors: { second: -1 }, name: "hertz", symbol: "Hz", quantity: "frequency", specialNamed: true },
     { factors: { meter: 1, second: -1 }, name: "meters per second", symbol: "\\frac{m}{s}", quantity: "velocity" },
     { factors: { meter: 1, second: -2 }, name: "meters per second squared", symbol: "\\frac{m}{s^2}", quantity: "acceleration" },
@@ -125,12 +126,11 @@ export const compositions = [
     
     
 
-    // List from https://en.wikipedia.org/wiki/SI_derived_unit#By_field_of_application (velocity and acceleration moved up for better gameplay)
+    // List from https://en.wikipedia.org/wiki/SI_derived_unit#By_field_of_application (area, velocity and acceleration moved up for better gameplay)
     { factors: { meter: 1, second: -3 }, name: "meters per second cubed", symbol: "\\frac{m}{s^3}", quantity: "jerk" },
     { factors: { meter: 1, second: -4 }, name: "meters per second to the fourth", symbol: "\\frac{m}{s^4}", quantity: "snap" },
     { factors: { second: -2}, name: "hertz per second", symbol: "Hz/s", quantity: "frequency drift" },
     { factors: { meter: 3, second: -1 }, name: "cubic meter per second", symbol: "\\frac{m^3}{s}", quantity: "volumetric flow" },
-    { factors: { meter: 2 }, name: "square meter", symbol: "m^2", quantity: "area" },
     { factors: { meter: 3 }, name: "cubic meter", symbol: "m^3", quantity: "volume" },
     { factors: { meter: 1, second: -1, kilogram: 1 }, name: "newton-second", symbol: "N\\cdot s", quantity: "momentum" },
     { factors: { meter: 2, second: -1, kilogram: 1 }, name: "newton-meter second", symbol: "N\\cdot m\\cdot s", quantity: "angular momentum" },

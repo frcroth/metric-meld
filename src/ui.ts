@@ -32,6 +32,7 @@ class WorkspaceElement {
 
         this.innerRect.classList.add("card");
         this.innerRect.classList.add("unit-inner");
+        this.innerRect.onmouseenter = () => window.ui.updateHoverText(this.inner);
 
         this.symbolElement = document.createElement("span");
         this.symbolElement.classList.add("symbol");
@@ -126,8 +127,7 @@ class WorkspaceElement {
 
 
 
-        // @ts-ignore
-        if (MathJax) MathJax.typeset();
+        window.ui.redrawFormulas([this.node]);
     }
 
     consume() {
@@ -168,16 +168,7 @@ class WorkspaceElement {
             e = e || window.event;
             e.preventDefault();
 
-            if (thisElement.isLibraryElement) {
-                // Duplicate this element and continue dragging this one
-                const newElement = thisElement.clone();
-                thisElement.isLibraryElement = false; // So we can merge this one.
-                thisElement.redraw();
-                newElement.redraw();
-
-                thisElement.node.style.top = newElement.node.getBoundingClientRect().top - yOffset + "px";
-                thisElement.node.style.left = newElement.node.offsetLeft - xOffset + "px";
-            }
+            
 
             initialX = e.clientX;
             initialY = e.clientY;
@@ -192,6 +183,17 @@ class WorkspaceElement {
         let mergePartner = null;
 
         function elementDrag(e) {
+            if (thisElement.isLibraryElement) {
+                // Duplicate this element and continue dragging this one
+                const newElement = thisElement.clone();
+                thisElement.isLibraryElement = false; // So we can merge this one.
+                thisElement.redraw();
+                newElement.redraw();
+
+                thisElement.node.style.top = newElement.node.getBoundingClientRect().top - yOffset + "px";
+                thisElement.node.style.left = newElement.node.offsetLeft - xOffset + "px";
+            }
+
             node.classList.add("grabbing");
             e = e || window.event;
             e.preventDefault();
@@ -264,14 +266,10 @@ class WorkspaceElement {
 export class UI {
     elements: Array<WorkspaceElement>;
     library: Library;
-    libraryWidth: number = 0;
-    libraryHeight: number = 0;
 
     constructor() {
         this.elements = [];
         this.library = new Library();
-        this.libraryHeight = 600; //TODO: calculate this
-        this.libraryWidth = 600;
     }
 
 
@@ -313,8 +311,29 @@ export class UI {
         document.getElementById("next-unit").innerHTML=this.library.getNextCompositionHint();
         document.getElementById("progress-indicator").innerHTML=this.library.getProgressHint();
     }
+
+    currentlyHovered: Combinable = null;
+    updateHoverText(hovered: Combinable) {
+        if (this.currentlyHovered == hovered) return;
+        this.currentlyHovered = hovered;
+        document.getElementById("element-info").innerHTML=hovered.getHoverHint();
+        this.redrawFormulas([document.getElementById("element-info")]);
+    }
+
+    redrawFormulas(elements: Array<HTMLElement> = []) {
+        // @ts-ignore
+        if (MathJax) {
+            if(elements.length != 0) {
+                // @ts-ignore
+                MathJax.typesetPromise(elements);
+            } else {
+                // @ts-ignore
+                MathJax.typesetPromise();
+            }
+        }
+                
+    }
 }
 
 // TODO: Formula collection?  
 // TODO: Local storage for saving?
-// TODO: Additional info when clicking on units: quantity, composition  
