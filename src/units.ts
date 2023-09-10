@@ -11,10 +11,11 @@ export class Unit {
 
     factor: number;
 
-    isSpecial: boolean = false;
+    isPredefinedComposition: boolean = false;
     assignedName: string | null = null;
     assignedSymbol: string | null = null;
     assignedQuantity: string | null = null;
+    isSpeciallyNamed = false;
 
     constructor(
         second: number,
@@ -42,6 +43,19 @@ export class Unit {
         const baseUnit = { ...base.factors };
         Object.assign(baseUnit, this);
         return baseUnit;
+    }
+
+    get isBase() {
+        return (
+            this.second == 0 &&
+            this.meter == 0 &&
+            this.kilogram == 0 &&
+            this.ampere == 0 &&
+            this.kelvin == 0 &&
+            this.mole == 0 &&
+            this.candela == 0 &&
+            this.factor == 1
+        );
     }
 
     equals(other: Unit) {
@@ -152,7 +166,7 @@ export class Unit {
         */
         for (const unit of window.ui.library.allCompositions) {
             if (unit.equals(this)) {
-                this.isSpecial = true;
+                this.isPredefinedComposition = true;
                 return unit;
             }
         }
@@ -200,6 +214,7 @@ export class Unit {
         newUnit.assignedName = spec.name;
         newUnit.assignedSymbol = spec.symbol;
         newUnit.assignedQuantity = spec.quantity;
+        newUnit.isSpeciallyNamed = spec.specialNamed || false;
         return newUnit;
     }
 
@@ -232,8 +247,10 @@ export class Unit {
             newUnit.assignedName = match.assignedName;
             newUnit.assignedSymbol = match.assignedSymbol;
             newUnit.assignedQuantity = match.assignedQuantity;
+            newUnit.isPredefinedComposition = true;
+            newUnit.isSpeciallyNamed = match.isSpeciallyNamed; //TODO: Refactor occurrences of assigning from match
         }
-        if (!window.ui.libraryContains(newUnit) && newUnit.isSpecial) {
+        if (!window.ui.libraryContains(newUnit) && newUnit.isPredefinedComposition) {
             window.ui.addLibraryElement(newUnit);
         }
 
@@ -270,8 +287,10 @@ export function combineUnits(unit1: Unit, unit2: Unit) {
         newUnit.assignedName = match.assignedName;
         newUnit.assignedSymbol = match.assignedSymbol;
         newUnit.assignedQuantity = match.assignedQuantity;
+        newUnit.isPredefinedComposition = true;
+        newUnit.isSpeciallyNamed = match.isSpeciallyNamed;
     }
-    if (!window.ui.libraryContains(newUnit) && newUnit.isSpecial) {
+    if (!window.ui.libraryContains(newUnit) && newUnit.isPredefinedComposition) {
         window.ui.addLibraryElement(newUnit);
     }
     return newUnit;

@@ -74,6 +74,8 @@ class WorkspaceElement {
                 newUnit.assignedName = match.assignedName;
                 newUnit.assignedSymbol = match.assignedSymbol;
                 newUnit.assignedQuantity = match.assignedQuantity;
+                newUnit.isPredefinedComposition = true;
+                newUnit.isSpeciallyNamed = match.isSpeciallyNamed;
             }
             this.name = newUnit.getName();
             this.symbol = newUnit.getSymbol();
@@ -91,18 +93,25 @@ class WorkspaceElement {
         this.nameElement.innerText = this.name;
         this.symbolElement.innerText = `$$${this.symbol}$$`;
 
-        this.innerRect.classList.remove("unit-inner-combined");
-        this.innerRect.classList.remove("unit-inner-lib");
-        this.innerRect.classList.remove("unit-inner-combined-lib");
-        this.innerRect.classList.remove("unit-inner-special");
-        if (!this.inner.isUnit) {
-            this.innerRect.classList.add("unit-inner-special");
-        } else if (this.isLibraryElement) {
-            this.innerRect.classList.add("unit-inner-lib");
-        } else if ((this.inner as Unit).isSpecial){
-            this.innerRect.classList.add("unit-inner-combined-lib");
+        this.innerRect.classList.remove("unit-inner-base");
+        this.innerRect.classList.remove("unit-inner-inverse");
+        this.innerRect.classList.remove("unit-inner-combined-named");
+        this.innerRect.classList.remove("unit-inner-combined-defined");
+        this.innerRect.classList.remove("unit-inner-combined-custom");
+
+        if (this.inner.isUnit) {
+            let unit = this.inner as Unit;
+            if (unit.isBase) {
+                this.innerRect.classList.add("unit-inner-base");
+            } else if (unit.isSpeciallyNamed) {
+                this.innerRect.classList.add("unit-inner-combined-named");
+            } else if (unit.isPredefinedComposition) {
+                this.innerRect.classList.add("unit-inner-combined-defined");
+            } else {
+                this.innerRect.classList.add("unit-inner-combined-custom");
+            }
         } else {
-            this.innerRect.classList.add("unit-inner-combined");
+            this.innerRect.classList.add("unit-inner-inverse");
         }
 
         if (this.isLibraryElement) {
@@ -172,7 +181,6 @@ class WorkspaceElement {
 
             initialX = e.clientX;
             initialY = e.clientY;
-            console.log(e);
             document.onmouseup = (e) => closeDragElement(e);
 
             document.onmousemove = (e) => elementDrag(e);
@@ -307,4 +315,6 @@ export class UI {
     }
 }
 
-// TODO: Formula collection?    
+// TODO: Formula collection?  
+// TODO: Local storage for saving?
+// TODO: Additional info when clicking on units: quantity, composition  

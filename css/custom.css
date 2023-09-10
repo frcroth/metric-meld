@@ -39,20 +39,24 @@
     background-color: darkblue;
 }
 
-.unit-inner-special {
+.unit-inner-base {
+    background-color: blueviolet;
+}
+
+.unit-inner-inverse {
     background-color: darkcyan;
 }
 
-.unit-inner-combined {
+.unit-inner-combined-named {
+    background-color: darkgreen;
+}
+
+.unit-inner-combined-defined {
     background-color: darkmagenta;
 }
 
-.unit-inner-combined-special {
-    background-color: darkviolet;
-}
-
-.unit-inner-combined-lib {
-    background-color: darkgreen;
+.unit-inner-combined-custom {
+    background-color: darkorange;
 }
 
 .merge-highlight div {
