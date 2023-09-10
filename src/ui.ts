@@ -303,8 +303,8 @@ export class UI {
 
     updateText() {
         document.getElementById("next-unit").innerHTML=this.library.getNextCompositionHint();
+        document.getElementById("progress-indicator").innerHTML=this.library.getProgressHint();
     }
 }
 
-// TODO: When dragging over library, remove element
 // TODO: Formula collection?    

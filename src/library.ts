@@ -2,6 +2,7 @@ import { compositions } from "./compositions";
 import { Unit } from "./units";
 
 export class Library {
+    
 
     baseUnits: Array<Unit>;
     foundDerivedUnits: Array<Unit>;
@@ -29,6 +30,12 @@ export class Library {
             return `Find a unit for <i>${nextNotFound.assignedQuantity}</i>.`;
         }
         return "All units found!";
+    }
+
+    getProgressHint(): string {
+        let foundCount = this.foundDerivedUnits.length;
+        let totalCount = this.allCompositions.length;
+        return `${foundCount}/${totalCount} units found.`;
     }
 
     addFoundElement(unit: Unit) {

@@ -279,6 +279,5 @@ export function combineUnits(unit1: Unit, unit2: Unit) {
 
 // TODO: Name units, find units from compositions, factors
 // TODO: Add quantity and explanation?
-// TODO: Add goals? Write how many units can be found on library?
 
 
