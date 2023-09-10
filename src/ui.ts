@@ -76,6 +76,7 @@ class WorkspaceElement {
                 newUnit.assignedSymbol = match.assignedSymbol;
                 newUnit.assignedQuantity = match.assignedQuantity;
                 newUnit.isPredefinedComposition = true;
+                newUnit.isSI = match.isSI;
                 newUnit.isSpeciallyNamed = match.isSpeciallyNamed;
             }
             this.name = newUnit.getName();

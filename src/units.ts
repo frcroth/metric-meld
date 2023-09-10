@@ -16,6 +16,7 @@ export class Unit {
     assignedSymbol: string | null = null;
     assignedQuantity: string | null = null;
     isSpeciallyNamed = false;
+    isSI = true;
 
     constructor(
         second: number,
@@ -111,6 +112,12 @@ export class Unit {
     getFactorName() {
         const factor = this.factor;
         if (factor == 1) return "";
+        if (factor == 1e30) return "quetta";
+        if (factor == 1e27) return "ronna";
+        if (factor == 1e24) return "yotta";
+        if (factor == 1e21) return "zetta";
+        if (factor == 1e18) return "exa";
+        if (factor == 1e15) return "peta";
         if (factor == 1e12) return "tera";
         if (factor == 1e9) return "giga";
         if (factor == 1e6) return "mega";
@@ -123,11 +130,23 @@ export class Unit {
         if (factor == 1e-6) return "micro";
         if (factor == 1e-9) return "nano";
         if (factor == 1e-12) return "pico";
+        if (factor == 1e-15) return "femto";
+        if (factor == 1e-18) return "atto";
+        if (factor == 1e-21) return "zepto";
+        if (factor == 1e-24) return "yocto";
+        if (factor == 1e-27) return "ronto";
+        if (factor == 1e-30) return "quecto";
         return this.factor;
     }
 
     getFactorSymbol() {
         if (this.factor == 1) return "";
+        if (this.factor == 1e30) return "Q";
+        if (this.factor == 1e27) return "R";
+        if (this.factor == 1e24) return "Y";
+        if (this.factor == 1e21) return "Z";
+        if (this.factor == 1e18) return "E";
+        if (this.factor == 1e15) return "P";
         if (this.factor == 1e12) return "T";
         if (this.factor == 1e9) return "G";
         if (this.factor == 1e6) return "M";
@@ -140,16 +159,14 @@ export class Unit {
         if (this.factor == 1e-6) return "µ";
         if (this.factor == 1e-9) return "n";
         if (this.factor == 1e-12) return "p";
+        if (this.factor == 1e-15) return "f";
+        if (this.factor == 1e-18) return "a";
+        if (this.factor == 1e-21) return "z";
+        if (this.factor == 1e-24) return "y";
+        if (this.factor == 1e-27) return "r";
+        if (this.factor == 1e-30) return "q";
+
         return "";
-        // TODO: add silly ones
-    }
-
-    getCombination() {
-        /*
-        Find the combination of base units and composed units that matches this unit most closely.
-        */
-        // TODO: implement
-
     }
 
     findExactCompositionMatch(): Unit | null {
@@ -207,6 +224,7 @@ export class Unit {
         newUnit.assignedSymbol = spec.symbol;
         newUnit.assignedQuantity = spec.quantity;
         newUnit.isSpeciallyNamed = spec.specialNamed || false;
+        newUnit.isSI = !spec.nonSI;
         return newUnit;
     }
 
@@ -240,6 +258,7 @@ export class Unit {
             newUnit.assignedSymbol = match.assignedSymbol;
             newUnit.assignedQuantity = match.assignedQuantity;
             newUnit.isPredefinedComposition = true;
+            newUnit.isSI = match.isSI;
             newUnit.isSpeciallyNamed = match.isSpeciallyNamed; //TODO: Refactor occurrences of assigning from match
         }
         if (!window.ui.libraryContains(newUnit) && newUnit.isPredefinedComposition) {
@@ -295,6 +314,7 @@ export function combineUnits(unit1: Unit, unit2: Unit) {
         newUnit.assignedSymbol = match.assignedSymbol;
         newUnit.assignedQuantity = match.assignedQuantity;
         newUnit.isPredefinedComposition = true;
+        newUnit.isSI = match.isSI;
         newUnit.isSpeciallyNamed = match.isSpeciallyNamed;
     }
     if (!window.ui.libraryContains(newUnit) && newUnit.isPredefinedComposition) {
@@ -303,7 +323,4 @@ export function combineUnits(unit1: Unit, unit2: Unit) {
     return newUnit;
 }
 
-// TODO: Name units, find units from compositions, factors
-// TODO: Add quantity and explanation?
-
-
+// TODO: Add custom factor

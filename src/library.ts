@@ -34,7 +34,7 @@ export class Library {
 
     getProgressHint(): string {
         let foundCount = this.foundDerivedUnits.length;
-        let totalCount = this.allCompositions.length;
+        let totalCount = this.allCompositions.filter(u => u.isSI).length;
         return `${foundCount}/${totalCount} units found.`;
     }
 
