@@ -22,12 +22,12 @@
 
 <body>
 
-    <div class="row">
+    <div class="row" id="main-row">
         <div class="col-10 workspace" id="workspace">
             <h2 class="heading">Workspace</h2>
         </div>
         <div class="col-2 library" id="lib">
-            <h2 class="heading">Library</h2>
+            <h2 class="heading" id="lib-heading">Library</h2>
             <div class="card" id="hints">
                 <p>Drag units from the library and combine them in the workspace.</p>
                 <p id="next-unit"></p>
@@ -35,6 +35,7 @@
             <div id="units-repo"></div>
         </div>
     </div>
+    <div id="footer">Created by frcroth. Find the code <a href="https://github.com/frcroth/little-units" alt="Github Link">here</a>.</div>
 
     <!-- BOOTSTRAP -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
