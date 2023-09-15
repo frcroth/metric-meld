@@ -1,5 +1,5 @@
 {
-  "name": "little-units",
+  "name": "metric-meld",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "format": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
   "author": "",
-  "license": "ISC",
+  "license": "",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",

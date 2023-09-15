@@ -355,4 +355,3 @@ export function combineUnits(u1: Unit, u2: Unit) {
     return newUnit;
 }
 
-// TODO: Add custom factor

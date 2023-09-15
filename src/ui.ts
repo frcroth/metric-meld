@@ -119,7 +119,7 @@ class WorkspaceElement {
             /*if (this.node.parentElement.id == "lib") {
                 this.node.remove();
                 document.getElementById("workspace").appendChild(this.node);
-            }*/ // TODO: Move newly created element to workspace
+            }*/ 
         }
 
 
@@ -346,5 +346,3 @@ export class UI {
         this.updateText();
     }
 }
-
-// TODO: Formula collection?  
