@@ -289,6 +289,26 @@ export class Unit {
         newUnit.applyProperties(this);
         return newUnit;
     }
+
+    toSpec() {
+        return {
+            factors: {
+                second: this.second,
+                meter: this.meter,
+                kilogram: this.kilogram,
+                ampere: this.ampere,
+                kelvin: this.kelvin,
+                mole: this.mole,
+                candela: this.candela,
+                factor: this.factor,
+            },
+            name: this.assignedName,
+            symbol: this.assignedSymbol,
+            quantity: this.assignedQuantity,
+            specialNamed: this.isSpeciallyNamed,
+            nonSI: !this.isSI,
+        };
+    }
 }
 
 export class Inverse {

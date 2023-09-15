@@ -1,4 +1,4 @@
-import { compositions } from "./compositions";
+import { baseUnits, compositions } from "./compositions";
 import { Unit } from "./units";
 
 export class Library {
@@ -10,11 +10,8 @@ export class Library {
     notFoundUnits: Map<string, Unit>;
 
     constructor() {
-        this.baseUnits = [];
-        this.foundDerivedUnits = [];
-        this.allCompositions = compositions.map(spec => Unit.fromSpec(spec));
-        this.notFoundUnits = new Map();
-        this.allCompositions.forEach(unit => this.notFoundUnits.set(unit.assignedName, unit));
+        this.baseUnits = baseUnits.map(spec => Unit.fromSpec(spec));
+        this.initialize();   
     }
 
     getNextComposition(): null | Unit {
@@ -41,6 +38,7 @@ export class Library {
     addFoundElement(unit: Unit) {
         this.foundDerivedUnits.push(unit);
         this.notFoundUnits.delete(unit.assignedName);
+        this.save();
     }
 
 
@@ -48,5 +46,32 @@ export class Library {
         return this.baseUnits.some((u) => u.equals(unit)) || this.foundDerivedUnits.some((u) => u.equals(unit));
     }
 
+
+    save() {
+        localStorage.setItem("foundUnits", JSON.stringify(this.foundDerivedUnits.map(u => u.toSpec())));
+    }
+
+    load() {
+        const foundUnitsLoaded = JSON.parse(localStorage.getItem("foundUnits"));
+        if(foundUnitsLoaded != null) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            foundUnitsLoaded.forEach((unitSpec: any) => {
+                let unit = Unit.fromSpec(unitSpec);
+                window.ui.addLibraryElement(unit);
+            });
+        }
+
+    }
+
+    initialize() {
+        this.foundDerivedUnits = [];
+        this.allCompositions = compositions.map(spec => Unit.fromSpec(spec));
+        this.notFoundUnits = new Map();
+        this.allCompositions.forEach(unit => this.notFoundUnits.set(unit.assignedName, unit));
+    }
+
+    resetProgress() {
+        this.initialize();
+    }
 
 }

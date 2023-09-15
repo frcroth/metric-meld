@@ -271,7 +271,7 @@ export class UI {
     }
 
 
-    init() {
+    init(loadFromLocalStorage: boolean = true) {
         baseUnits.forEach((baseUnit) => {
             const unit = Unit.fromSpec(baseUnit);
             this.library.baseUnits.push(unit);
@@ -287,6 +287,9 @@ export class UI {
         this.elements.forEach((element) => {
             element.draw(initRoot);
         });
+        if(loadFromLocalStorage) {
+            window.ui.library.load();
+        }
         setTimeout(() => this.elements.forEach((element) => element.redraw()), 50);
         this.updateText();
     }
@@ -319,19 +322,29 @@ export class UI {
     }
 
     redrawFormulas(elements: Array<HTMLElement> = []) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         if (MathJax) {
             if(elements.length != 0) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 MathJax.typesetPromise(elements);
             } else {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 MathJax.typesetPromise();
             }
         }
                 
     }
+
+    resetProgress() {
+        this.library.resetProgress();
+        document.getElementById("units-repo").innerText = "";
+        this.elements = [];
+        this.init(false);
+        this.updateText();
+    }
 }
 
 // TODO: Formula collection?  
-// TODO: Local storage for saving?
