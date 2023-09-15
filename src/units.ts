@@ -39,12 +39,7 @@ export class Unit {
 
         this.factor = factor;
     }
-
-    normalized() {
-        const baseUnit = { ...base.factors };
-        Object.assign(baseUnit, this);
-        return baseUnit;
-    }
+ 
 
     get isBase() {
         // exactly one of the base units is one
@@ -183,6 +178,16 @@ export class Unit {
     }
 
 
+    applyProperties(unit: Unit){
+        this.assignedName = unit.assignedName;
+        this.assignedSymbol = unit.assignedSymbol;
+        this.assignedQuantity = unit.assignedQuantity;
+        this.isPredefinedComposition = unit.isPredefinedComposition;
+        this.isSI = unit.isSI;
+        this.isSpeciallyNamed = unit.isSpeciallyNamed;
+    }
+
+
     getSymbol() {
         if (this.assignedSymbol != null) {
             return this.assignedSymbol;
@@ -209,6 +214,7 @@ export class Unit {
 
     get isUnit() { return true; }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromSpec(spec: any) {
         const newUnit = new Unit(
             spec.factors.second || 0,
@@ -225,6 +231,7 @@ export class Unit {
         newUnit.assignedQuantity = spec.quantity;
         newUnit.isSpeciallyNamed = spec.specialNamed || false;
         newUnit.isSI = !spec.nonSI;
+        newUnit.isPredefinedComposition = true;
         return newUnit;
     }
 
@@ -254,12 +261,7 @@ export class Unit {
         );
         const match = newUnit.findExactCompositionMatch();
         if (match != null) {
-            newUnit.assignedName = match.assignedName;
-            newUnit.assignedSymbol = match.assignedSymbol;
-            newUnit.assignedQuantity = match.assignedQuantity;
-            newUnit.isPredefinedComposition = true;
-            newUnit.isSI = match.isSI;
-            newUnit.isSpeciallyNamed = match.isSpeciallyNamed; //TODO: Refactor occurrences of assigning from match
+            newUnit.applyProperties(match);    
         }
         if (!window.ui.libraryContains(newUnit) && newUnit.isPredefinedComposition) {
             window.ui.addLibraryElement(newUnit);
@@ -273,6 +275,21 @@ export class Unit {
         let baseString = this.isBase ? "This is a base unit. " : "";
         let nameString = this.isSpeciallyNamed ? "This unit is a specially named derived unit." : "";
         return `\\(${this.getSymbol()}\\) : ${this.getName()} ${quantityString}${baseString}${nameString}$$s^{${this.second}}m^{${this.meter}}kg^{${this.kilogram}}A^{${this.ampere}}K^{${this.kelvin}}mol^{${this.mole}}cd^{${this.candela}}\\cdot${this.factor}$$`;
+    }
+
+    clone() {
+        const newUnit = new Unit(
+            this.second,
+            this.meter,
+            this.kilogram,
+            this.ampere,
+            this.kelvin,
+            this.mole,
+            this.candela,
+            this.factor,
+        );
+        newUnit.applyProperties(this);
+        return newUnit;
     }
 }
 
@@ -291,13 +308,15 @@ export class Inverse {
     getName() {
         return "Inverse";
     }
+
+    clone() {
+        return new Inverse();
+    }
 }
 
 export type Combinable = Unit | Inverse;
 
-export function combineUnits(unit1: Unit, unit2: Unit) {
-    const u1 = unit1.normalized();
-    const u2 = unit2.normalized();
+export function combineUnits(u1: Unit, u2: Unit) {
     const newUnit = new Unit(
         u1.second + u2.second,
         u1.meter + u2.meter,
@@ -310,12 +329,7 @@ export function combineUnits(unit1: Unit, unit2: Unit) {
     );
     const match = newUnit.findExactCompositionMatch();
     if (match != null) {
-        newUnit.assignedName = match.assignedName;
-        newUnit.assignedSymbol = match.assignedSymbol;
-        newUnit.assignedQuantity = match.assignedQuantity;
-        newUnit.isPredefinedComposition = true;
-        newUnit.isSI = match.isSI;
-        newUnit.isSpeciallyNamed = match.isSpeciallyNamed;
+        newUnit.applyProperties(match);
     }
     if (!window.ui.libraryContains(newUnit) && newUnit.isPredefinedComposition) {
         window.ui.addLibraryElement(newUnit);

@@ -72,12 +72,7 @@ class WorkspaceElement {
 
             const match = newUnit.findExactCompositionMatch();
             if (match != null) {
-                newUnit.assignedName = match.assignedName;
-                newUnit.assignedSymbol = match.assignedSymbol;
-                newUnit.assignedQuantity = match.assignedQuantity;
-                newUnit.isPredefinedComposition = true;
-                newUnit.isSI = match.isSI;
-                newUnit.isSpeciallyNamed = match.isSpeciallyNamed;
+                newUnit.applyProperties(match);   
             }
             this.name = newUnit.getName();
             this.symbol = newUnit.getSymbol();
@@ -138,7 +133,7 @@ class WorkspaceElement {
 
     clone() {
         // new element takes the place of the current element, so that the drag can continue on the current element
-        const newElement = new WorkspaceElement(this.inner, this.symbol, this.name); // TODO: clone inner
+        const newElement = new WorkspaceElement(this.inner.clone(), this.symbol, this.name);
         const thisElementChildIndex = Array.from(this.node.parentNode.children).indexOf(this.node);
         newElement.draw(document.getElementById("units-repo"), thisElementChildIndex);
         newElement.node.style.left = this.node.style.left;
@@ -338,3 +333,4 @@ export class UI {
 
 // TODO: Formula collection?  
 // TODO: Local storage for saving?
+// TODO: Fix remaining red border
