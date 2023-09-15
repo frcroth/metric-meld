@@ -3,10 +3,16 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "repository": {
+    "url": "git+https://github.com/frcroth/metric-meld.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=development npx webpack-dev-server --config webpack.config.js",
-    "format": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "build": "webpack --mode=development --config webpack.config.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "author": "",
   "license": "",
@@ -14,6 +20,7 @@
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
     "eslint": "^8.49.0",
+    "gh-pages": "^6.0.0",
     "prettier": "^3.0.1",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
