@@ -95,6 +95,7 @@ class WorkspaceElement {
         this.innerRect.classList.remove("unit-inner-combined-named");
         this.innerRect.classList.remove("unit-inner-combined-defined");
         this.innerRect.classList.remove("unit-inner-combined-custom");
+        this.node.classList.remove("merge-highlight");
 
         if (this.inner.isUnit) {
             let unit = this.inner as Unit;
@@ -227,6 +228,7 @@ class WorkspaceElement {
             if (mergePartner) {
                 // Do merge!
                 thisElement.mergeWith(mergePartner.elem);
+                mergePartner = null;
             }
 
             if (node.offsetTop == originalTop && node.offsetLeft == originalLeft) {
@@ -333,4 +335,3 @@ export class UI {
 
 // TODO: Formula collection?  
 // TODO: Local storage for saving?
-// TODO: Fix remaining red border

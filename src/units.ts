@@ -1,5 +1,3 @@
-import { base } from "./compositions";
-
 export class Unit {
     second: number;
     meter: number;
