@@ -1,0 +1,123 @@
+/*!**********************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./css/custom.css ***!
+  \**********************************************************************************************/
+* {
+    font-family: 'Lato', sans-serif;
+}
+
+.library {
+    height: 95vh;
+    background-color: gainsboro;
+}
+
+.workspace {
+
+    height: 95vh;
+}
+
+.heading {
+    padding: 5px;
+}
+
+.combinable {
+    position: absolute
+}
+
+.in-library {
+    position: static !important;
+    display: flex;
+    margin-bottom: 5px;
+    column-gap: 5px;
+}
+
+.unit-inner {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.unit-inner-lib {
+    background-color: darkblue;
+}
+
+.unit-inner-base {
+    background-color: blueviolet;
+}
+
+.unit-inner-inverse {
+    background-color: darkcyan;
+}
+
+.unit-inner-combined-named {
+    background-color: darkgreen;
+}
+
+.unit-inner-combined-defined {
+    background-color: darkmagenta;
+}
+
+.unit-inner-combined-custom {
+    background-color: darkorange;
+}
+
+.merge-highlight div {
+    border-width: 3px;
+    border-color: red;
+}
+
+.symbol {
+    color: white;
+}
+
+.name-label {}
+
+.grabbable {
+    cursor: grab
+}
+
+.grabbing {
+    cursor: grabbing !important
+}
+
+#hints {
+    margin-bottom: 10px;
+    margin-right: 5px;
+    padding: 2px;
+    min-height: fit-content;
+    background-color: lightgray;
+}
+
+#units-repo {
+    height: 70%;
+    overflow: scroll;
+    margin-right: 5px;
+
+}
+
+#main-row {
+    height: 95vh;
+}
+
+#footer {
+    height: 5vh;
+    text-align: center;
+    background-color: gainsboro;
+}
+
+#lib-heading {
+    max-height: 10%;
+}
+
+#info-row {
+    position: absolute;
+    bottom: 0;
+    color: darkgray;
+    width: 100%;
+}
+
+#progress-indicator {
+    position: absolute;
+    bottom: 0;
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+
+    <title>Metric Meld</title>
+    <meta name="author" content="frcroth" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="css/custom.css" />
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+<script defer src="main.bcf1c446a762184b4bf0.js"></script><link href="main.bcf1c446a762184b4bf0.css" rel="stylesheet"></head>
+
+<body>
+
+    <div class="row" id="main-row">
+        <div class="col-10 workspace" id="workspace">
+            <h2 class="heading">Workspace</h2>
+            <div class="row justify-content-between" id="info-row">
+                <div class="col-4">
+                    <p id="progress-indicator">0/XX units found</p>
+                </div>
+                <div class="col-4">
+                    <p id="element-info"></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 library" id="lib">
+            <h2 class="heading" id="lib-heading">Library</h2>
+            <div class="card" id="hints">
+                <p>Drag units from the library and combine them in the workspace.</p>
+                <p id="next-unit"></p>
+            </div>
+            <div id="units-repo"></div>
+        </div>
+    </div>
+    <div id="footer" class="row">
+        <div class="col-sm">Created by frcroth. Find the code <a href="https://github.com/frcroth/metric-meld" alt="Github Link">here</a>.</div>
+        <div class="col-sm"> <a href="javascript:window.ui.resetProgress()">Reset progress</a></div>
+    </div>
+
+    <!-- BOOTSTRAP -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
